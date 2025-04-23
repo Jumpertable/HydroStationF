@@ -23,60 +23,83 @@ export default function RegisterManager() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white flex items-center justify-center px-4">
-      <form
-        action={action}
-        className="w-full max-w-md bg-zinc-900 text-white p-8 rounded-2xl shadow-xl"
-      >
-        <h1 className="text-2xl font-bold text-orange-500 mb-6 text-center">
-          Manager Register
-        </h1>
+    <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center px-4">
+  <form
+    action={action}
+    className="w-full max-w-md bg-zinc-800 text-white p-8 rounded-2xl shadow-xl"
+  >
+    <h1 className="text-3xl font-bold text-orange-500 mb-6 text-center">
+      Manager Register
+    </h1>
 
-        <div>
-          <label htmlFor="first_name">First Name</label>
-          <input
-            className="w-full text-black px-2 p-2 rounded bg-blue-50 border-2 border-black"
-            type="text"
-            name="first_name"
-          />
-        </div>
+    {/* First Name */}
+    <div className="mb-4">
+      <label htmlFor="first_name" className="block text-sm font-medium text-gray-200 mb-1">
+        First Name
+      </label>
+      <input
+        className="w-full text-black px-3 py-2 rounded-md bg-blue-50 border-2 border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        type="text"
+        name="first_name"
+        required
+        placeholder="John"
+      />
+    </div>
 
-        <div>
-          <label htmlFor="last_name">Last Name</label>
-          <input
-            className="w-full text-black px-2 p-2 rounded bg-blue-50 border-2 border-black"
-            type="text"
-            name="last_name"
-          />
-        </div>
+    {/* Last Name */}
+    <div className="mb-4">
+      <label htmlFor="last_name" className="block text-sm font-medium text-gray-200 mb-1">
+        Last Name
+      </label>
+      <input
+        className="w-full text-black px-3 py-2 rounded-md bg-blue-50 border-2 border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        type="text"
+        name="last_name"
+        required
+        placeholder="Doe"
+      />
+    </div>
 
-        <div>
-          <label htmlFor="businessEmail">Email</label>
-          <input
-            className="w-full text-black px-2 p-2 rounded bg-blue-50 border-2 border-black"
-            type="email"
-            name="businessEmail"
-            required
-          />
-        </div>
+    {/* Email */}
+    <div className="mb-4">
+      <label htmlFor="businessEmail" className="block text-sm font-medium text-gray-200 mb-1">
+        Email
+      </label>
+      <input
+        className="w-full text-black px-3 py-2 rounded-md bg-blue-50 border-2 border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        type="email"
+        name="businessEmail"
+        required
+        placeholder="johndoe@hydrostation.com"
+      />
+    </div>
 
-        <div>
-          <label htmlFor="companyAddress">Company Address</label>
-          <input
-            className="w-full text-black px-2 p-2 rounded bg-blue-50 border-2 border-black"
-            type="text"
-            name="companyAddress"
-          />
-        </div>
+    {/* Company Address */}
+    <div className="mb-4">
+      <label htmlFor="companyAddress" className="block text-sm font-medium text-gray-200 mb-1">
+        Company Address
+      </label>
+      <input
+        className="w-full text-black px-3 py-2 rounded-md bg-blue-50 border-2 border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        type="text"
+        name="companyAddress"
+        placeholder="kitty@hydrstation.th"
+      />
+    </div>
 
-        <div>
-          <label htmlFor="password">Password</label>
-          <input
-            className="w-full text-black px-2 p-2 rounded bg-blue-50 border-2 border-black"
-            type="password"
-            name="password"
-          />
-        </div>
+    {/* Password */}
+    <div className="mb-4">
+      <label htmlFor="password" className="block text-sm font-medium text-gray-200 mb-1">
+        Password
+      </label>
+      <input
+        className="w-full text-black px-3 py-2 rounded-md bg-blue-50 border-2 border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        type="password"
+        name="password"
+        required
+        placeholder="********"
+      />
+    </div>
 
         <div className="p-3">
           <button

@@ -19,8 +19,9 @@ export async function middleware(request: NextRequest) {
 // }
 
 export const config = {
-  matcher: "/customer/edit/:path*",
+  matcher: ["/customer/:path*", "/order/:path*", "/product/:path*"],
 };
+
 
 // export const config = {
 //   matcher: ['/blog/new/:path*', '/blog/:path*'],

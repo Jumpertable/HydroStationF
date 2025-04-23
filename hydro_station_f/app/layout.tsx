@@ -15,7 +15,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={`${roboto.className} antialiased`}>
-        <header className="flex justify-end items-center font-bold text-xl gap-4 p-4 bg-blue-300">
+        <header className="flex justify-end items-center font-bold text-blue-800 text-xl gap-4 p-4 bg-blue-300">
           <Link className="mr-auto" href="/">
             HydroStation
           </Link>

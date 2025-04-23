@@ -1,20 +1,20 @@
-"use server";
+'use server';
 
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { decrypt } from "./loginUser";
+import { decrypt } from './loginUser';
 import { NextRequest, NextResponse } from "next/server";
 
 export const token = async () => {
-  return (await cookies()).get("access_token")?.value;
+  return (await cookies()).get('access_token')?.value;
 };
 
 export async function getUserNameFromToken() {
   try {
-    const sessionToken = await token();
-    if (!sessionToken) return null;
+    const sessionToken = await token();   
+    if (!sessionToken) return null; 
     const payload = await decrypt(sessionToken);
-    console.log("payload: ", payload);
+    console.log("payload: ", payload);  
     return payload.username as string;
   } catch (e) {
     console.error("Failed to get user name from token:", e);

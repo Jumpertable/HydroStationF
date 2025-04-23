@@ -1,6 +1,6 @@
 "use server";
 
-import { SERVER_URL } from "@/app/constant"
+import { SERVER_URL } from "../../constant"
 
 export default async function registerManager(
   prevState: unknown,
