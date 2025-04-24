@@ -17,7 +17,7 @@ export default function ManagerLoginPage() {
   const { businessEmail, password } = state.data;
 
   if (state.message) {
-    redirect('/'); // redirect after successful login
+    redirect('/Manager');
   }
 
  return(<div className="min-h-screen bg-gray-900 text-white flex items-center justify-center px-4">

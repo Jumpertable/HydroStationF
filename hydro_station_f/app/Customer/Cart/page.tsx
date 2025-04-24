@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 
 interface OrderItem {
   product: any;
@@ -23,66 +23,52 @@ export default function CartPage() {
 
   useEffect(() => {
     const storedID = localStorage.getItem("cusID");
-    if (storedID) {
-      setCusID(parseInt(storedID));
+    const parsedID = storedID && !isNaN(+storedID) ? parseInt(storedID) : null;
+
+    if (parsedID !== null) {
+      setCusID(parsedID);
     }
   }, []);
 
-  useEffect(() => {
-    if (cusID !== null) {
-      fetchCart();
+  const fetchCart = useCallback(async () => {
+    if (cusID === null || isNaN(cusID)) {
+      console.warn("❌ Invalid cusID:", cusID);
+      return;
     }
-  }, [cusID]);
-
-  const fetchCart = async () => {
-    if (!cusID) return;
-    setLoading(true);
 
     try {
-      // Fetch active order
-      const orderRes = await fetch(
-        `http://localhost:3100/order/customer/${cusID}/active`
-      );
+      const res = await fetch(`http://localhost:3100/order/customer/${cusID}/active`);
 
-      // If no content or not OK, set empty items and return
-      if (orderRes.status === 204 || !orderRes.ok) {
-        console.log(`No active order found or error: ${orderRes.status}`);
+      const hasBody = res.headers.get("content-length") !== "0";
+
+      if (res.status === 204 || !hasBody) {
+        console.log("🛒 No active order");
         setItems([]);
         return;
       }
 
-      // Check if response is empty before parsing
-      const responseText = await orderRes.text();
-      if (!responseText) {
-        console.log("Empty response from server");
+      if (!res.ok) {
+        console.error("❌ Failed to fetch cart:", res.status);
         setItems([]);
         return;
       }
 
-      // Parse the response text as JSON
-      const orderData = responseText ? JSON.parse(responseText) : null;
-
+      const orderData = await res.json();
       if (!orderData || !orderData.orderID) {
-        console.log("Order data is empty or missing orderID");
         setItems([]);
         return;
       }
 
-      // Fetch order items
       const orderID = orderData.orderID;
-      const itemsRes = await fetch(
-        `http://localhost:3100/order-items/order/${orderID}`
-      );
+      const itemsRes = await fetch(`http://localhost:3100/order-items/order/${orderID}`);
 
-      if (!itemsRes.ok) {
-        console.error(`Failed to fetch order items: ${itemsRes.status}`);
+      const hasItemsBody = itemsRes.headers.get("content-length") !== "0";
+      if (!itemsRes.ok || !hasItemsBody) {
         setItems([]);
         return;
       }
 
-      // Use text() then parse for safer JSON handling
-      const itemsText = await itemsRes.text();
-      const itemsData = itemsText ? JSON.parse(itemsText) : [];
+      const itemsData = await itemsRes.json();
       setItems(itemsData);
     } catch (err) {
       console.error("❌ Failed to load cart:", err);
@@ -90,7 +76,14 @@ export default function CartPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [cusID]);
+
+  useEffect(() => {
+    if (cusID !== null) {
+      fetchCart();
+    }
+  }, [cusID, fetchCart]);
+
   const total = items.reduce(
     (sum, item) => sum + (item.product?.productPrice || 0) * item.amount,
     0
@@ -110,8 +103,15 @@ export default function CartPage() {
         }),
       });
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Payment failed");
+      const text = await res.text();
+      if (!text) {
+        console.warn("Empty response body");
+        setItems([]);
+        return;
+      }
+
+      const orderData = JSON.parse(text);
+      if (!res.ok) throw new Error(orderData.message || "Payment failed");
 
       setMessage(
         "✅ Payment successful! Your order is being processed. Redirecting..."
@@ -164,96 +164,106 @@ export default function CartPage() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto p-6">
-      <h1 className="text-3xl font-bold text-blue-800 mb-6 text-center">
-        Your Cart
-      </h1>
+    <div className="max-w-3xl mx-auto p-8 bg-gradient-to-br from-white via-blue-50 to-blue-100 rounded-2xl shadow-2xl border border-blue-200 text-blue-900">
+  <h1 className="text-4xl font-bold text-blue-800 drop-shadow mb-6 text-center">🛒 Your Cart</h1>
 
-      <Link href="/Customer/Orders">
-        <button className="text-sm text-blue-500 underline mt-2">
-          View Past Orders
-        </button>
-      </Link>
+  {/* Past Orders */}
+  <div className="text-center mb-4">
+    <Link href="/Customer/Orders">
+      <button className="text-sm text-blue-600 underline hover:text-blue-800 transition">📜 View Past Orders</button>
+    </Link>
+  </div>
 
-      {message && (
-        <div className="text-center mb-4 text-sm font-semibold text-green-600">
-          {message}
-        </div>
-      )}
-
-      <ul className="space-y-4">
-        {items.map((item) => (
-          <li
-            key={item.orderItemID}
-            className="bg-white shadow rounded p-4 flex justify-between items-center"
-          >
-            <div>
-              <div className="font-semibold text-lg">
-                {item.product?.productName ?? "Unnamed Product"}
-              </div>
-              <div className="text-sm text-gray-500 flex items-center gap-2 mt-1">
-                <button
-                  onClick={() => updateQuantity(item, -1)}
-                  className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
-                >
-                  –
-                </button>
-                x{item.amount}
-                <button
-                  onClick={() => updateQuantity(item, 1)}
-                  className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
-                >
-                  +
-                </button>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="text-blue-600 font-semibold">
-                {item.product?.productPrice
-                  ? `$${(item.product.productPrice * item.amount).toFixed(2)}`
-                  : "N/A"}
-              </div>
-              <button
-                onClick={() => deleteItem(item.orderItemID)}
-                className="text-red-500 hover:text-red-700 text-lg"
-              >
-                🗑️
-              </button>
-            </div>
-          </li>
-        ))}
-      </ul>
-
-      <div className="mt-8 text-right text-xl font-bold text-green-700">
-        Total: B{total.toFixed(2)}
-      </div>
-
-      <div className="mt-6 flex flex-col items-end gap-3">
-        <select
-          className="border p-2 rounded w-40"
-          value={payMethod}
-          onChange={(e) => setPayMethod(e.target.value)}
-        >
-          <option value="cash">Cash</option>
-          <option value="card">Card</option>
-          <option value="mobile">Mobile</option>
-        </select>
-
-        <button
-          disabled={total <= 0}
-          onClick={handleCheckout}
-          className={`bg-green-600 text-white px-6 py-2 rounded ${
-            total <= 0 ? "opacity-50 cursor-not-allowed" : "hover:bg-green-700"
-          }`}
-        >
-          Pay Now
-        </button>
-      </div>
-      <Link href="/Customer/Store">
-        <button className="mt-4 text-blue-600 underline hover:text-blue-800">
-          ← Back to the Station
-        </button>
-      </Link>
+  {/* Message */}
+  {message && (
+    <div className="text-center mb-4 text-sm font-semibold text-green-600">
+      {message}
     </div>
+  )}
+
+  {/* Items */}
+  <ul className="space-y-4">
+    {items.map((item) => (
+      <li
+        key={item.orderItemID}
+        className="bg-white/80 border border-blue-100 p-5 rounded-xl shadow-md flex justify-between items-center hover:shadow-lg transition"
+      >
+        <div>
+          <div className="font-semibold text-lg text-blue-800">
+            {item.product?.productName ?? "Unnamed Product"}
+          </div>
+          <div className="text-sm text-blue-700 flex items-center gap-2 mt-2">
+            <button
+              onClick={() => updateQuantity(item, -1)}
+              className="px-3 py-1 bg-blue-100 text-blue-800 font-bold rounded-full hover:bg-blue-200 shadow-sm transition"
+            >
+              –
+            </button>
+            <span className="font-semibold">x{item.amount}</span>
+            <button
+              onClick={() => updateQuantity(item, 1)}
+              className="px-3 py-1 bg-blue-100 text-blue-800 font-bold rounded-full hover:bg-blue-200 shadow-sm transition"
+            >
+              +
+            </button>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-4">
+          <div className="text-blue-700 font-bold text-lg">
+            {item.product?.productPrice
+              ? `$${(item.product.productPrice * item.amount).toFixed(2)}`
+              : "N/A"}
+          </div>
+          <button
+            onClick={() => deleteItem(item.orderItemID)}
+            className="text-red-500 hover:text-red-700 text-xl"
+          >
+            🗑️
+          </button>
+        </div>
+      </li>
+    ))}
+  </ul>
+
+  {/* Total */}
+  <div className="mt-8 text-right text-2xl font-bold text-green-700 drop-shadow">
+    💰 Total: ฿{total.toFixed(2)}
+  </div>
+
+  {/* Payment */}
+  <div className="mt-6 flex flex-col items-end gap-4">
+    <select
+      className="border border-blue-300 bg-white shadow-sm px-4 py-2 rounded-lg w-44 focus:ring-2 focus:ring-blue-400 transition"
+      value={payMethod}
+      onChange={(e) => setPayMethod(e.target.value)}
+    >
+      <option value="cash">💵 Cash</option>
+      <option value="card">💳 Card</option>
+      <option value="mobile">📱 Mobile</option>
+    </select>
+
+    <button
+      disabled={total <= 0}
+      onClick={handleCheckout}
+      className={`w-44 px-5 py-2 text-white font-semibold rounded-full shadow-md transition 
+        ${
+          total <= 0
+            ? "bg-green-300 cursor-not-allowed"
+            : "bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700"
+        }`}
+    >
+      ✅ Pay Now
+    </button>
+  </div>
+
+  {/* Back to store */}
+  <div className="text-center mt-8">
+    <Link href="/Customer/Store">
+      <button className="text-blue-600 underline hover:text-blue-800 transition">← Back to the Station</button>
+    </Link>
+  </div>
+</div>
+
   );
 }

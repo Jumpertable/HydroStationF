@@ -67,7 +67,7 @@ export default function StorePage() {
   return (
     <div className="min-h-screen p-8 bg-blue-50">
       <h1 className="text-4xl font-bold text-center mb-8 text-blue-800">
-        Product Store
+        Welcome To HydroStation!!
       </h1>
 
       {message && (
@@ -99,31 +99,36 @@ function ProductCard({
   const [qty, setQty] = useState(1);
 
   return (
-    <div className="bg-white p-4 shadow rounded">
+    <div className="bg-gradient-to-br from-white via-blue-50 to-blue-100 p-5 rounded-2xl shadow-xl border border-blue-200 text-blue-900 transition-all hover:scale-[1.01]">
       <img
         src={product.image_url}
         alt={product.productName}
-        className="w-full h-40 object-cover rounded mb-3"
+        className="w-full h-40 object-cover rounded-xl mb-4 border border-blue-100 shadow-sm"
       />
-      <h2 className="text-lg font-bold mb-1">{product.productName}</h2>
-      <p className="text-gray-600 text-sm mb-1">{product.productBrand}</p>
-      <p className="text-blue-700 font-semibold mb-3">
+
+      <h2 className="text-xl font-bold text-blue-800 mb-1">
+        {product.productName}
+      </h2>
+      <p className="text-sm text-blue-700 mb-1">{product.productBrand}</p>
+      <p className="text-lg font-semibold text-blue-600 mb-4">
         ${product.productPrice.toFixed(2)}
       </p>
-      <div className="flex items-center justify-between gap-2">
+
+      <div className="flex items-center justify-between gap-3">
         <input
           type="number"
           min={1}
           value={qty}
           onChange={(e) => setQty(parseInt(e.target.value))}
-          className="w-16 px-2 py-1 border rounded"
+          className="w-20 px-3 py-1 bg-white border border-blue-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
         />
+
         <button
-          onClick={() => onAdd(product.productID, qty)}
-          className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-        >
-          Add to Cart
-        </button>
+  onClick={() => onAdd(product.productID, qty)}
+  className="bg-gradient-to-r from-cyan-400 via-blue-500 to-green-500 text-white font-semibold px-5 py-2 rounded-full shadow-lg hover:brightness-105 hover:shadow-xl active:scale-95 transition-all duration-200"
+>
+  🛒 Add to Cart
+</button>
       </div>
     </div>
   );

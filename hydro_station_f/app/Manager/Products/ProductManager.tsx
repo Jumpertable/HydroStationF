@@ -68,56 +68,66 @@ export default function ProductManager() {
 
   return (
     <div className="space-y-6">
+      {/* Header */}
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-semibold text-gray-800">Product List</h2>
+        <h2 className="text-3xl font-bold text-blue-800 drop-shadow-md">
+          Product List
+        </h2>
         <Link href="/Manager/Products/add">
-          <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+          <button className="bg-gradient-to-r from-blue-400 to-blue-600 text-white px-5 py-2 rounded-full shadow hover:from-blue-500 hover:to-blue-700 transition duration-200">
             + Add Product
           </button>
         </Link>
       </div>
 
+      {/* Product Cards */}
       <div className="grid gap-6">
         {products.map((product) => (
           <div
             key={product.id}
-            className="bg-white rounded-lg p-4 shadow flex flex-col md:flex-row justify-between items-start md:items-center"
+            className="bg-gradient-to-b from-white to-blue-50 border border-blue-200 rounded-2xl p-6 shadow-lg transition hover:scale-[1.01] hover:shadow-xl"
           >
-            <div>
-              <h3 className="text-lg font-bold">{product.productName}</h3>
-              <p className="text-gray-600">
-                {product.productDes || "No description"}
-              </p>
-              <p className="text-sm text-gray-500">
-                Brand: {product.productBrand}
-              </p>
-              <p className="text-sm text-gray-500">
-                Stock: {product.productStock}
-              </p>
-              {product.stockLimit !== undefined && (
-                <p
-                  className={`text-sm ${
-                    product.productStock <= product.stockLimit
-                      ? "text-red-600"
-                      : "text-green-600"
-                  }`}
-                >
-                  Limit: {product.stockLimit}
+            <div className="flex flex-col md:flex-row justify-between md:items-center">
+              <div className="space-y-1">
+                <h3 className="text-xl font-bold text-blue-900">
+                  {product.productName}
+                </h3>
+                <p className="text-gray-600">
+                  {product.productDes || "No description"}
                 </p>
-              )}
-            </div>
-            <div className="mt-4 md:mt-0 space-x-2">
-              <Link href={`/Manager/Products/edit/${product.productID}`}>
-                <button className="px-4 py-2 bg-yellow-400 rounded hover:bg-yellow-500">
-                  Edit
+                <p className="text-sm text-gray-500">
+                  Brand: {product.productBrand}
+                </p>
+                <p className="text-sm text-gray-500">
+                  Stock: {product.productStock}
+                </p>
+                {product.stockLimit !== undefined && (
+                  <p
+                    className={`text-sm font-medium ${
+                      product.productStock <= product.stockLimit
+                        ? "text-red-600"
+                        : "text-green-600"
+                    }`}
+                  >
+                    Limit: {product.stockLimit}
+                  </p>
+                )}
+              </div>
+
+              {/* Buttons */}
+              <div className="mt-4 md:mt-0 space-x-2">
+                <Link href={`/Manager/Products/edit/${product.productID}`}>
+                  <button className="px-4 py-2 bg-yellow-300 text-black rounded-full shadow hover:bg-yellow-400 transition">
+                    Edit
+                  </button>
+                </Link>
+                <button
+                  onClick={() => deleteProduct(product.id)}
+                  className="px-4 py-2 bg-red-500 text-white rounded-full shadow hover:bg-red-600 transition"
+                >
+                  Delete
                 </button>
-              </Link>
-              <button
-                onClick={() => deleteProduct(product.id)}
-                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-              >
-                Delete
-              </button>
+              </div>
             </div>
           </div>
         ))}

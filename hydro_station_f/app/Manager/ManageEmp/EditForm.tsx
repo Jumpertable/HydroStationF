@@ -1,14 +1,20 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { updateEmployee, getEmployees } from './api';
+import { useState, useEffect } from "react";
+import { updateEmployee, getEmployees } from "./api";
 
-export default function EditEmployeeForm({ employeeId, onComplete }: { employeeId: number, onComplete?: () => void }) {
+export default function EditEmployeeForm({
+  employeeId,
+  onComplete,
+}: {
+  employeeId: number;
+  onComplete?: () => void;
+}) {
   const [formData, setFormData] = useState({
-    first_name: '',
-    last_name: '',
-    businessEmail: '',
-    password: '',
+    first_name: "",
+    last_name: "",
+    businessEmail: "",
+    password: "",
   });
 
   useEffect(() => {
@@ -20,7 +26,7 @@ export default function EditEmployeeForm({ employeeId, onComplete }: { employeeI
           first_name: emp.first_name,
           last_name: emp.last_name,
           businessEmail: emp.businessEmail,
-          password: '', // Keep empty unless you want to reset it
+          password: "", // Keep empty unless you want to reset it
         });
       }
     };
@@ -39,22 +45,34 @@ export default function EditEmployeeForm({ employeeId, onComplete }: { employeeI
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <h2 className="text-xl font-bold mb-2">Edit Employee</h2>
-      {['first_name', 'last_name', 'businessEmail', 'password'].map((field) => (
+    <form
+      onSubmit={handleSubmit}
+      className="space-y-5 bg-gradient-to-br from-white via-blue-50 to-blue-100 p-6 rounded-2xl shadow-xl border border-blue-200 text-blue-900 transition-all"
+    >
+      <h2 className="text-2xl font-bold mb-4 drop-shadow text-blue-800">
+        ✏️ Edit Employee
+      </h2>
+
+      {["first_name", "last_name", "businessEmail", "password"].map((field) => (
         <input
           key={field}
-          type={field === 'password' ? 'password' : 'text'}
+          type={field === "password" ? "password" : "text"}
           name={field}
           value={(formData as any)[field]}
           onChange={handleChange}
-          placeholder={field.replace('_', ' ')}
-          className="w-full px-4 py-2 border border-gray-300 rounded"
-          required={field !== 'password'} // password optional
+          placeholder={field
+            .replace("_", " ")
+            .replace(/^./, (str) => str.toUpperCase())}
+          className="w-full px-4 py-2 bg-white border border-blue-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+          required={field !== "password"} // password optional
         />
       ))}
-      <button type="submit" className="px-4 py-2 bg-green-600 text-white rounded">
-        Update Employee
+
+      <button
+        type="submit"
+        className="w-full py-2 bg-gradient-to-r from-green-400 to-green-600 text-white font-semibold rounded-full shadow hover:from-green-500 hover:to-green-700 transition"
+      >
+        💾 Update Employee
       </button>
     </form>
   );

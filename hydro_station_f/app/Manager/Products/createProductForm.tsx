@@ -8,7 +8,7 @@ type FormData = {
   productPrice: number;
   productStock: number;
   productBrand: string;
-  image_url: string,
+  image_url: string;
 };
 
 export default function CreateProductForm() {
@@ -18,7 +18,7 @@ export default function CreateProductForm() {
     productPrice: 0,
     productStock: 0,
     productBrand: "",
-    image_url: '',
+    image_url: "",
   });
 
   const [message, setMessage] = useState("");
@@ -65,52 +65,58 @@ export default function CreateProductForm() {
   };
 
   return (
-    <div className="bg-white p-6 rounded shadow-md text-black max-w-xl w-full mx-auto">
-      <h2 className="text-2xl font-semibold text-gray-800 mb-4">Add Product</h2>
+    <div className="bg-gradient-to-br from-white via-blue-50 to-blue-100 p-8 rounded-2xl shadow-2xl text-blue-900 max-w-xl w-full mx-auto transition-all">
+      <h2 className="text-3xl font-bold mb-6 drop-shadow text-blue-700">
+        ➕ Add New Product
+      </h2>
 
       {message && (
         <div
-          className={`mb-4 p-3 rounded ${
+          className={`mb-4 p-3 rounded-xl font-medium shadow ${
             message.startsWith("✅")
-              ? "bg-green-100 text-green-800"
-              : "bg-red-100 text-red-800"
+              ? "bg-green-100 text-green-800 border border-green-300"
+              : "bg-red-100 text-red-800 border border-red-300"
           }`}
         >
           {message}
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-4 ">
+      <form onSubmit={handleSubmit} className="space-y-5">
+        {/* Name */}
         <input
           type="text"
           name="productName"
           value={formData.productName}
           onChange={handleChange}
           placeholder="Product Name"
-          className="w-full px-4 py-2 border rounded"
+          className="w-full px-4 py-2 bg-white border border-blue-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
           required
         />
 
+        {/* Description */}
         <textarea
           name="productDes"
           value={formData.productDes}
           onChange={handleChange}
           placeholder="Product Description"
-          className="w-full px-4 py-2 border rounded"
+          className="w-full px-4 py-2 bg-white border border-blue-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
 
-        <div>🪙 Price: </div>
+        {/* Price */}
+        <div className="text-blue-800 font-semibold">🪙 Price</div>
         <input
           type="number"
           name="productPrice"
           value={formData.productPrice}
           onChange={handleChange}
           min={0}
-          className="w-full px-4 py-2 border rounded"
+          className="w-full px-4 py-2 bg-white border border-blue-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
           required
         />
 
-        <div>📦 Stock: </div>
+        {/* Stock */}
+        <div className="text-blue-800 font-semibold">📦 Stock</div>
         <input
           type="number"
           name="productStock"
@@ -118,35 +124,38 @@ export default function CreateProductForm() {
           onChange={handleChange}
           placeholder="Stock"
           min={0}
-          className="w-full px-4 py-2 border rounded"
+          className="w-full px-4 py-2 bg-white border border-blue-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
           required
         />
 
+        {/* Brand */}
         <input
           type="text"
           name="productBrand"
           value={formData.productBrand}
           onChange={handleChange}
           placeholder="Brand"
-          className="w-full px-4 py-2 border rounded"
+          className="w-full px-4 py-2 bg-white border border-blue-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
           required
         />
 
+        {/* Image */}
         <input
           type="text"
           name="image_url"
           value={formData.image_url}
           onChange={handleChange}
           placeholder="Image URL"
-          className="w-full px-4 py-2 border rounded"
+          className="w-full px-4 py-2 bg-white border border-blue-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
           required
         />
 
+        {/* Submit */}
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+          className="w-full bg-gradient-to-r from-blue-400 to-blue-600 text-white font-semibold py-2 rounded-full shadow hover:from-blue-500 hover:to-blue-700 transition-all"
         >
-          Add Product
+          🚀 Add Product
         </button>
       </form>
     </div>

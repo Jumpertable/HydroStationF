@@ -7,7 +7,7 @@ export async function middleware(request: NextRequest) {
   const res = await checkCookie(request);
   console.log("res: ", res);
   if (res) return res;
-  else return NextResponse.redirect(new URL("/login", request.url));
+  else return NextResponse.redirect(new URL("/manager/register", request.url));
 
   // === Short coing style
   // return (await updateSession(request)) || NextResponse.redirect(new URL("/blog/login", request.url));
@@ -19,7 +19,7 @@ export async function middleware(request: NextRequest) {
 // }
 
 export const config = {
-  matcher: ["/customer/:path*", "/order/:path*", "/product/:path*"],
+  matcher: ["/Manager/:path*","/customer/:path*", "/order/:path*", "/product/:path*"],
 };
 
 

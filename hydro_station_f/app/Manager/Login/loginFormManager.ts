@@ -45,7 +45,10 @@ export default async function loginFormManager(
     return {
       error: "",
       message: "Login successfully",
-      data,
+      data: {
+        ...data,
+        managerID: json.managerID, 
+      },
     };
   } else {
     console.error("Error Login:", json);

@@ -12,7 +12,7 @@ export default function EditProductPage() {
 
   // Safety check
   if (!id || isNaN(Number(id))) {
-    return <div className="text-red-500">❌ Invalid Product ID</div>;
+    return <div className="text-red-500">Invalid Product ID</div>;
   }
 
   return <EditProductForm productId={parseInt(id as string)} />;

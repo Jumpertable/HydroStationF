@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { getEmployees, deleteEmployee } from "./api";
 import EditEmployeeForm from "./EditForm";
+import CreateEmployeeForm from "./CreateForm";
+
 
 type Employee = {
   id: number;
@@ -12,7 +14,7 @@ type Employee = {
 };
 
 export default function EmployeeList() {
-  const managerId = 1; // Replace with actual logged-in managerId
+  const managerId = 1;
   const [employees, setEmployees] = useState<Employee[] | null>(null);
   const [editingId, setEditingId] = useState<number | null>(null);
 
@@ -21,20 +23,13 @@ export default function EmployeeList() {
       const data = await getEmployees(managerId);
       console.log("📦 Fetched:", data);
 
-      // If data is an array, set it directly
       if (Array.isArray(data)) {
         setEmployees(data);
-      }
-
-      // If wrapped in { employees: [...] }
-      else if (data && Array.isArray(data.employees)) {
+      } else if (data && Array.isArray(data.employees)) {
         setEmployees(data.employees);
-      }
-
-      // If something went wrong or structure is unexpected
-      else {
+      } else {
         console.error("Unexpected data format:", data);
-        setEmployees([]); // fallback
+        setEmployees([]);
       }
     } catch (err) {
       console.error("❌ Failed to fetch employees:", err);
@@ -52,47 +47,50 @@ export default function EmployeeList() {
   };
 
   return (
-    <div className="p-6 bg-white shadow rounded">
-      <h1 className="text-2xl font-bold mb-4">Employees</h1>
+    <div className="p-8 bg-gradient-to-b from-white via-blue-50 to-blue-100 rounded-2xl shadow-2xl border border-blue-200 text-blue-900 transition-all space-y-8">
+      <h1 className="text-3xl font-bold text-blue-800 drop-shadow">👥 Employees</h1>
+
+      <CreateEmployeeForm managerId={managerId} /> {/* 👈 NEW: Create form */}
 
       {editingId && (
-        <div className="mb-6">
-          <EditEmployeeForm
-            employeeId={editingId}
-            onComplete={() => {
-              setEditingId(null);
-              loadEmployees();
-            }}
-          />
-        </div>
+        <EditEmployeeForm
+          employeeId={editingId}
+          onComplete={() => {
+            setEditingId(null);
+            loadEmployees();
+          }}
+        />
       )}
 
       {!employees ? (
-        <p className="text-gray-600">Loading employees...</p>
+        <p className="text-blue-700 italic">Loading employees...</p>
       ) : employees.length === 0 ? (
-        <p className="text-gray-500">No employees found.</p>
+        <p className="text-blue-600 italic">No employees found.</p>
       ) : (
-        <ul className="divide-y divide-gray-300">
+        <ul className="divide-y divide-blue-200">
           {employees.map((emp) => (
-            <li key={emp.id} className="flex justify-between items-center py-2">
+            <li
+              key={emp.id}
+              className="flex justify-between items-center py-4 transition hover:bg-blue-100/30 rounded-lg px-2"
+            >
               <div>
-                <div className="font-semibold">
+                <div className="font-semibold text-blue-900">
                   {emp.first_name} {emp.last_name}
                 </div>
-                <div className="text-sm text-gray-600">{emp.businessEmail}</div>
+                <div className="text-sm text-blue-700">{emp.businessEmail}</div>
               </div>
               <div className="space-x-2">
                 <button
-                  className="px-3 py-1 bg-yellow-400 rounded"
+                  className="px-4 py-1 bg-yellow-300 rounded-full shadow hover:bg-yellow-400 transition"
                   onClick={() => setEditingId(emp.id)}
                 >
-                  Edit
+                  ✏️ Edit
                 </button>
                 <button
                   onClick={() => handleDelete(emp.id)}
-                  className="px-3 py-1 bg-red-500 text-white rounded"
+                  className="px-4 py-1 bg-red-500 text-white rounded-full shadow hover:bg-red-600 transition"
                 >
-                  Delete
+                  ❌ Delete
                 </button>
               </div>
             </li>
