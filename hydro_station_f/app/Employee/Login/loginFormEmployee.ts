@@ -1,19 +1,20 @@
 "use server";
 import { token } from "@/utils/manageCookie";
 import { cookies } from "next/headers";
-import { SERVER_URL } from "../../constant";
+import { SERVER_URL } from "@/app/constant";
 
-export default async function loginFormManager(
+export default async function loginFormEmployee(
   prevState: unknown,
   formData: FormData
 ) {
   const data = {
     businessEmail: formData.get("businessEmail") as string,
     password: formData.get("password") as string,
+    manager_code: formData.get("manager_code") as string,
   };
   console.log("data: ", data);
 
-  const res = await fetch(`${SERVER_URL}/auth/manager/login`, {
+  const res = await fetch(`${SERVER_URL}/employee/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
