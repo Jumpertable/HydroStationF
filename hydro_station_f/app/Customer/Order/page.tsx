@@ -65,12 +65,12 @@ export default function OrdersPage() {
       <div className="flex justify-center gap-6 mb-8">
         <Link href="/Customer/Store">
           <button className="px-6 py-2 bg-gradient-to-r from-blue-400 to-blue-600 text-white font-semibold rounded-full shadow hover:from-blue-500 hover:to-blue-700 transition">
-            🛍️ Back to Store
+          - Back to the Station
           </button>
         </Link>
         <Link href="/Customer/Cart">
           <button className="px-6 py-2 bg-gradient-to-r from-green-400 to-green-600 text-white font-semibold rounded-full shadow hover:from-green-500 hover:to-green-700 transition">
-            🧺 Go to Cart
+          ← Go to Cart
           </button>
         </Link>
       </div>
