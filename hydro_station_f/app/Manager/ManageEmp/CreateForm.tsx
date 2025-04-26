@@ -5,8 +5,10 @@ import { createEmployee } from "./api";
 
 export default function CreateEmployeeForm({
   managerId,
+  onCreated,
 }: {
   managerId: number;
+  onCreated?: () => void;
 }) {
   const [formData, setFormData] = useState({
     first_name: "",
@@ -26,9 +28,14 @@ export default function CreateEmployeeForm({
     const res = await createEmployee({ ...formData, manager_id: managerId });
 
     if (res && res.passcode) {
-      setResponseMessage(
-        `✅ Employee created successfully.\n🧾 Daily Passcode: ${res.passcode}`
-      );
+      setResponseMessage(`✅ Employee created.\n🧾 Passcode: ${res.passcode}`);
+      setFormData({
+        first_name: "",
+        last_name: "",
+        businessEmail: "",
+        password: "",
+      });
+      if (onCreated) onCreated(); // <-- reload list
     } else {
       setResponseMessage("❌ Failed to create employee.");
     }
@@ -58,6 +65,7 @@ export default function CreateEmployeeForm({
             .replace("_", " ")
             .replace(/^./, (c) => c.toUpperCase())}
           onChange={handleChange}
+          value={formData[field as keyof typeof formData]}
           className="w-full px-4 py-2 bg-white border border-blue-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
           required
         />

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { updateEmployee, getEmployees } from "./api";
+import { updateEmployee, getEmployeeById } from "./api";
 
 export default function EditEmployeeForm({
   employeeId,
@@ -15,18 +15,19 @@ export default function EditEmployeeForm({
     last_name: "",
     businessEmail: "",
     password: "",
+    manager_id: 1, // ✅ Include this!
   });
 
   useEffect(() => {
     const fetchData = async () => {
-      const employees = await getEmployees(1); // Replace `1` with dynamic manager_id if needed
-      const emp = employees.find((e: any) => e.id === employeeId);
+      const emp = await getEmployeeById(employeeId);
       if (emp) {
         setFormData({
           first_name: emp.first_name,
           last_name: emp.last_name,
           businessEmail: emp.businessEmail,
-          password: "", // Keep empty unless you want to reset it
+          password: "", // Optional
+          manager_id: emp.manager_id || 1, // ✅ Populate correctly
         });
       }
     };
@@ -40,8 +41,9 @@ export default function EditEmployeeForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await updateEmployee(employeeId, formData);
-    if (onComplete) onComplete(); // optional callback after update
+    console.log("Updating with:", formData);
+    await updateEmployee(employeeId, formData); 
+    if (onComplete) onComplete();
   };
 
   return (
@@ -64,7 +66,7 @@ export default function EditEmployeeForm({
             .replace("_", " ")
             .replace(/^./, (str) => str.toUpperCase())}
           className="w-full px-4 py-2 bg-white border border-blue-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-          required={field !== "password"} // password optional
+          required={field !== "password"}
         />
       ))}
 
