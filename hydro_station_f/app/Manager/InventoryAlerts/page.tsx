@@ -51,7 +51,7 @@ export default function InventoryAlertsPage() {
     <div className="overflow-x-auto rounded-lg">
       <table className="min-w-full border-collapse bg-white/80 shadow-md rounded-lg overflow-hidden">
         <thead className="bg-gradient-to-r from-blue-100 to-blue-200 text-blue-900 text-sm font-semibold tracking-wide">
-          <tr>
+            <tr>
             <th className="px-6 py-3 border border-blue-200 text-left rounded-tl-lg">Product ID</th>
             <th className="px-6 py-3 border border-blue-200 text-left">Product Name</th>
             <th className="px-6 py-3 border border-blue-200 text-center">Stock</th>
